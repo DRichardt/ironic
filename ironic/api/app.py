@@ -17,6 +17,7 @@
 
 import keystonemiddleware.audit as audit_middleware
 from oslo_config import cfg
+from oslo_utils import importutils
 import oslo_middleware.cors as cors_middleware
 import osprofiler.web as osprofiler_web
 import pecan
@@ -30,9 +31,8 @@ from ironic.common import exception
 from ironic.conf import CONF
 
 # sapcc/openstack-watcher-middleware
-import watcher.errors as watcher_errors
-import watcher.watcher as watcher_middleware
-
+watcher_errors = importutils.try_import('watcher.errors')
+watcher_middleware = importutils.try_import('watcher.watcher')
 
 class IronicCORS(cors_middleware.CORS):
     """Ironic-specific CORS class
@@ -99,7 +99,7 @@ def setup_app(pecan_config=None, extra_hooks=None):
             public_api_routes=pecan_config.app.acl_public_routes)
 
     # sapcc/openstack-watcher-middleware
-    if CONF.watcher.enabled:
+    if watcher_errors and watcher_middleware and CONF.watcher.enabled:
         try:
             app = watcher_middleware.OpenStackWatcherMiddleware(
                 app,
