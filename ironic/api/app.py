@@ -30,9 +30,8 @@ from ironic.common import exception
 from ironic.conf import CONF
 
 # sapcc/openstack-watcher-middleware
-if CONF.watcher.enabled:
-    import watcher.errors as watcher_errors
-    import watcher.watcher as watcher_middleware
+import watcher.errors as watcher_errors
+import watcher.watcher as watcher_middleware
 
 
 class IronicCORS(cors_middleware.CORS):
