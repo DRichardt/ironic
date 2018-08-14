@@ -33,9 +33,18 @@ opts = [
     cfg.StrOpt('statsd_host',
                default="127.0.0.1",
                help=_('Host of the StatsD backend')),
+    cfg.StrOpt('statsd_namespace',
+               default="127.0.0.1",
+               help=_('Namespace to use for metrics')),
     cfg.IntOpt('statsd_port',
                default=9125,
                help=_('Port of the StatsD backend')),
+    cfg.BoolOpt('target_project_id_from_path',
+                default=False,
+                help=_('Whether to get the target project uid from the path')),
+    cfg.BoolOpt('target_project_id_from_service_catalog',
+                default=False,
+                help=_('Whether to get the target project uid from the service catalog'))
 ]
 
 
