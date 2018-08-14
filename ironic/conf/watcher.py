@@ -44,7 +44,16 @@ opts = [
                 help=_('Whether to get the target project uid from the path')),
     cfg.BoolOpt('target_project_id_from_service_catalog',
                 default=False,
-                help=_('Whether to get the target project uid from the service catalog'))
+                help=_('Whether to get the target project uid from the service catalog')),
+    cfg.BoolOpt('include_target_project_id_in_metric',
+                default=True,
+                help=_('Whether to include the target project id in the metrics')),
+    cfg.BoolOpt('include_target_domain_id_in_metric',
+                default=True,
+                help=_('Whether to include the target domain id in the metrics')),
+    cfg.BoolOpt('include_authentication_initiator_user_id_in_metric',
+                default=True,
+                help=_('Whether to include the initiator user id for authentication request in the metrics'))
 ]
 
 
