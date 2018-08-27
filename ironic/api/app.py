@@ -103,7 +103,7 @@ def setup_app(pecan_config=None, extra_hooks=None):
         try:
             app = watcher_middleware.OpenStackWatcherMiddleware(
                 app,
-                config=CONF.watcher
+                config=dict(CONF.watcher)
             )
         except (EnvironmentError, OSError,
                 watcher_errors.ConfigError) as e:
