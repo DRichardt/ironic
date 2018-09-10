@@ -52,14 +52,16 @@ class SwiftAPI(object):
                       'user': CONF.swift.username,
                       'key': CONF.swift.password}
         else:
-            container_project_id = session_args.pop('container_project_id', None)
+            container_project_id = session_args.pop('container_project_id'
+                                                    , None)
             session = _get_swift_session(**session_args)
             preauthurl = keystone.get_service_url(session,
-					          service_type='object-store')
+                                                  service_type='object-store')
             session_project_id = session.get_project_id()
 
-	    if container_project_id and preauthurl.endswith(session_project_id):
-                preauthurl = preauthurl.replace(session_project_id, container_project_id)
+        if container_project_id and preauthurl.endswith(session_project_id):
+            preauthurl = preauthurl.replace(session_project_id,
+                                            container_project_id)
 
             params = {
                 'retries': CONF.swift.swift_max_retries,
