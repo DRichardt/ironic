@@ -30,6 +30,7 @@ from ironic.drivers.modules.drac import management as drac_mgmt
 from ironic.drivers.modules.drac import power as drac_power
 from ironic.drivers.modules.drac import raid as drac_raid
 from ironic.drivers.modules.drac import vendor_passthru as drac_vendor
+from ironic.drivers.modules.drac import vnc as drac_vnc
 from ironic.drivers.modules import fake
 from ironic.drivers.modules.ilo import inspect as ilo_inspect
 from ironic.drivers.modules.ilo import management as ilo_management
@@ -237,3 +238,20 @@ class FakeOneViewDriver(base.BaseDriver):
         self.boot = fake.FakeBoot()
         self.deploy = fake.FakeDeploy()
         self.inspect = fake.FakeInspect()
+
+
+class FakeDracVNCDriver(base.BaseDriver):
+    """All fake except for VNC console."""
+
+    def __init__(self):
+        if not importutils.try_import('dracclient'):
+            raise exception.DriverLoadError(
+                driver=self.__class__.__name__,
+                reason=_('Unable to import python-dracclient library'))
+
+        self.power = fake.FakePower()
+        self.boot = fake.FakeBoot()
+        self.deploy = fake.FakeDeploy()
+        self.management = fake.FakeManagement()
+        self.raid = fake.FakeRAID()
+        self.console = drac_vnc.iDracVNCConsole()

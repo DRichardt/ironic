@@ -21,11 +21,13 @@ from ironic.common import exception
 from ironic.common.i18n import _
 from ironic.drivers import base
 from ironic.drivers import generic
+from ironic.drivers.modules import agent
 from ironic.drivers.modules.drac import inspect as drac_inspect
 from ironic.drivers.modules.drac import management
 from ironic.drivers.modules.drac import power
 from ironic.drivers.modules.drac import raid
 from ironic.drivers.modules.drac import vendor_passthru
+from ironic.drivers.modules.drac import vnc
 from ironic.drivers.modules import inspector
 from ironic.drivers.modules import iscsi_deploy
 from ironic.drivers.modules import noop
@@ -93,3 +95,21 @@ class PXEDracInspectorDriver(PXEDracDriver):
         super(PXEDracInspectorDriver, self).__init__()
         self.inspect = inspector.Inspector.create_if_enabled(
             'PXEDracInspectorDriver')
+
+
+class AgentDracVNCDriver(base.BaseDriver):
+    """DRAC driver using Agent for deploy and exposing VNC console."""
+
+    def __init__(self):
+        if not importutils.try_import('dracclient'):
+            raise exception.DriverLoadError(
+                driver=self.__class__.__name__,
+                reason=_('Unable to import python-dracclient library'))
+
+        self.power = power.DracPower()
+        self.boot = pxe.PXEBoot()
+        self.deploy = agent.AgentDeploy()
+        self.management = management.DracManagement()
+        self.raid = raid.DracRAID()
+        self.vendor = vendor_passthru.DracVendorPassthru()
+        self.console = vnc.iDracVNCConsole()
