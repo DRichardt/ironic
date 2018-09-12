@@ -45,15 +45,15 @@ class SwiftAPI(object):
     """API for communicating with Swift."""
 
     def __init__(self, **session_args):
-
+        container_project_id = None
         params = {}
         if CONF.deploy.object_store_endpoint_type == 'radosgw':
             params = {'authurl': CONF.swift.auth_url,
                       'user': CONF.swift.username,
                       'key': CONF.swift.password}
         else:
-            container_project_id = session_args.pop('container_project_id'
-                                                    , None)
+            container_project_id = session_args.pop('container_project_id',
+                                                    None)
         session = _get_swift_session(**session_args)
         preauthurl = keystone.get_service_url(session,
                                               service_type='object-store')
