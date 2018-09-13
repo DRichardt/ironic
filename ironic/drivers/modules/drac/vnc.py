@@ -208,6 +208,6 @@ class iDracVNCConsole(base.ConsoleInterface):
     def get_console(self, task):
         p_info = parse_vnc_driver_info(task.node)
         p_info.update(drac_common.parse_driver_info(task.node))
-        url = "vnc://{host}:{port}".format(host=p_info['drac_host'],
+        url = "vnc://{host}:{port}".format(host=p_info['drac_address'],
                                            port=p_info['drac_vnc_port'])
         return {'type': 'vnc', 'url': url}
