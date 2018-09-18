@@ -110,8 +110,18 @@ def _stop_console(node_uuid):
 
     try:
         console_pid = _get_console_pid(node_uuid)
-
         os.kill(console_pid, signal.SIGTERM)
+
+        # kill hard if not terminated fast
+        attempt = 0
+        while attempt != 5:
+            if psutil.pid_exists(console_pid):
+                os.kill(console_pid, signal.SIGKILL)
+                time.sleep(0.1)
+                attempt += 1
+            else:
+                break
+
     except OSError as exc:
         if exc.errno != errno.ESRCH:
             msg = (_("Could not stop the console for node '%(node)s'. "
