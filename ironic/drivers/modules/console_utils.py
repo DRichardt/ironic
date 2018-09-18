@@ -116,7 +116,8 @@ def _stop_console(node_uuid):
         attempt = 0
         while attempt != 5:
             if psutil.pid_exists(console_pid):
-                os.kill(console_pid, signal.SIGKILL)
+                if attempt == 4:
+                    os.kill(console_pid, signal.SIGKILL)
                 time.sleep(0.1)
                 attempt += 1
             else:
@@ -254,7 +255,7 @@ def start_shellinabox_console(node_uuid, port, console_cmd):
         if locals['returncode'] is not None:
             path_exist = os.path.exists(pid_file)
             pid_exist = psutil.pid_exists(_get_console_pid(node_uuid))
-            LOG.debug('Subprocess returncode: %s, pid_exist: %s, '
+            LOG.debug('Shellinabox subprocess returncode: %s, pid_exist: %s, '
                       'path_exist: %s' % (locals['returncode'],
                                           path_exist,
                                           pid_exist))
@@ -263,9 +264,8 @@ def start_shellinabox_console(node_uuid, port, console_cmd):
                 raise loopingcall.LoopingCallDone()
 
         if (time.time() > expiration):
-            locals['errstr'] = _("Timeout while waiting for console subprocess"
-                                 "to start for node %s.") % node_uuid
-            LOG.warning(locals['errstr'])
+            LOG.warning("Timeout while waiting for console subprocess"
+                        " to start for node %s." % node_uuid)
 
             (stdout, stderr) = popen_obj.communicate()
             locals['errstr'] = _(
