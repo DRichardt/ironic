@@ -114,11 +114,11 @@ def _stop_console(node_uuid):
 
         # kill hard if not terminated fast
         attempt = 0
-        while attempt != 5:
+        while attempt != 3:
             if psutil.pid_exists(console_pid):
-                if attempt == 4:
+                if attempt == 2:
                     os.kill(console_pid, signal.SIGKILL)
-                time.sleep(0.1)
+                time.sleep(CONF.console.subprocess_checking_interval / 10.0)
                 attempt += 1
             else:
                 break
